@@ -56,6 +56,23 @@ namespace MobilePN
             {
                 PublishResponse response = null;
 
+
+                var json = userData.SerializeTargetUserToJson();
+                Console.WriteLine(json);
+                PubsubMessage message = new PubsubMessage
+                {
+                    // The data is any arbitrary ByteString. Here, we're using text.
+
+                    Data = ByteString.CopyFromUtf8(json),
+                    // The attributes provide metadata in a string-to-string dictionary.
+                    Attributes =
+                        {
+                            { "description", "TargetedUserData" }
+                        }
+                };
+
+                response = _publisherClient.Publish(DefaultTopicName,new [] {message});
+
                 return response;
             }
 

@@ -14,6 +14,7 @@ namespace MobilePN
         {
             bool Init(String projectId, String topicName);
 
+            bool Push(int bulkSize, TargetedUserData data);
             bool PushBulk(int bulkSize, List<TargetedUserData> bulkData);
         }
     }

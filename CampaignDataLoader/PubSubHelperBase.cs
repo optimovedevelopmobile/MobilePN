@@ -64,24 +64,30 @@ namespace MobilePN
                 PublishResponse response = null;
 
                 TargetedUserData currData = null;
+
+                List<PubsubMessage> messages = new List<PubsubMessage>();
+
                 foreach (var item in userDataList)
                 {
                     currData = item;
+                    var json = currData.SerializeTargetUserToJson();
+                    Console.WriteLine(json);
+                    PubsubMessage message = new PubsubMessage
+                    {
+                        // The data is any arbitrary ByteString. Here, we're using text.
 
-                }
-                var json = currData.SerializeTargetUserToJson();
-                PubsubMessage message = new PubsubMessage
-                {
-                    // The data is any arbitrary ByteString. Here, we're using text.
+                        Data = ByteString.CopyFromUtf8(json),
+                        // The attributes provide metadata in a string-to-string dictionary.
+                        Attributes =
+                        {
+                            { "description", "TargetedUserData" }
+                        }
+                    };
 
-                    Data = ByteString.CopyFromUtf8(json),
-                    // The attributes provide metadata in a string-to-string dictionary.
-                    Attributes =
-                {
-                    { "description", "TargetedUserData" }
+                    messages.Add(message);
                 }
-                };
-                response = _publisherClient.Publish(DefaultTopicName, new[] { message });
+
+                response = _publisherClient.Publish(DefaultTopicName, messages);
 
                 return response;
             }

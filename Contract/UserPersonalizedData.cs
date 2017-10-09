@@ -28,6 +28,7 @@ namespace MobilePN
             }
             public UserPersonalizedData()
             {
+                PersonalizedValues = new Dictionary<String, String>();
 
             }
 

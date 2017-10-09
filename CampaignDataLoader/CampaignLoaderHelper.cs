@@ -12,23 +12,66 @@ namespace MobilePN
         public class CampaignLoaderHelper : CampaignLoaderIf
         {
             protected PubSubHelperIf _pubSubHelper = null;
-            public String  ProjectId { get; set; }
+            public String ProjectId { get; set; }
 
-            public String  TopicName { get; set; }
+            public String TopicName { get; set; }
             public bool Init(string projectId, string topicName)
             {
-                ProjectId = projectId;
-                TopicName = topicName;
-                _pubSubHelper = new PubSubHelperBase();
-                _pubSubHelper.Init(projectId);
-                _pubSubHelper.SetTopicName(TopicName);
-                return true;
+
+                bool status = true;
+                try
+                {
+                    ProjectId = projectId;
+                    TopicName = topicName;
+                    _pubSubHelper = new PubSubHelperBase();
+                    _pubSubHelper.Init(projectId);
+                    _pubSubHelper.SetTopicName(TopicName);
+
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine(error);
+                    return false;
+                }
+
+                return status;
+
+            }
+
+            public bool Push(int bulkSize, TargetedUserData data)
+            {
+                bool status = true;
+                try
+                {
+                    PublishResponse result = _pubSubHelper.PublishUserDataToPubSub(data, TopicName);
+
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine(error);
+                    return false;
+                }
+
+                return status;
+
             }
 
             public bool PushBulk(int bulkSize, List<TargetedUserData> bulkData)
             {
-                PublishResponse result = _pubSubHelper.PublishUserDataBulkToPubSub(bulkData, TopicName);
-                return true;
+                bool status = true;
+                try
+                {
+                    PublishResponse result = _pubSubHelper.PublishUserDataBulkToPubSub(bulkData, TopicName);
+
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine(error);
+                    return false;
+                }
+
+                return status;
+
             }
         }
     }
